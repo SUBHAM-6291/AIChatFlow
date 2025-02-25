@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbconnect from "@/lib/Db.Connect";
 import { UserModel } from "@/Models/User.Model";
-import Email from "next-auth/providers/email";
+
 
 // CHAPTER 1: Type Declarations
 // Extending NextAuth's default types to include custom user properties
