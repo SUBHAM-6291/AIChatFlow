@@ -14,9 +14,9 @@ export async function middleware(request: NextRequest) {
         url.pathname.startsWith('/sign-up') ||
         url.pathname.startsWith('/verify') ||
         url.pathname.startsWith('/')  // Exact match for root page
-    )) {
-        return NextResponse.redirect(new URL('/home', request.url));
-    }
+    )) //{
+     //   return NextResponse.redirect(new URL('/home', request.url));
+ //   }
 
     // Default redirect (optional, kept from your original code)
     return NextResponse.redirect(new URL('/home', request.url));
