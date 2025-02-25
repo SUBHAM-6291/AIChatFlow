@@ -1,6 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-// Message Interface and Schema
 export interface Message extends Document {
     content: string;
     createdAt: Date;
@@ -18,16 +17,15 @@ export interface Message extends Document {
     }
 });
 
-// User Interface and Schema
 export interface User extends Document {
     username: string;
     email: string;
     password: string;
     verifyCode: string;
     verifyCodeExpiry: Date;
-    isVerified: boolean;  // Fixed typo from isverified to isVerified
+    isVerified: boolean;
     isAcceptingMessage: boolean;
-    messages: Message[];  // Changed to Message array instead of single Message
+    messages: Message[];
 }
 
 const UserSchema: Schema<User> = new Schema({
