@@ -68,7 +68,7 @@ const Page = () => {
       toast(response.data.message, {
         style: { background: "green", color: "white" },
       });
-      router.push(`/verify/${data.username}`); // Use data.username instead of state
+      router.push(`/verify/${data.username}`); 
     } catch (error) {
       console.error("Error in signup of user:", error);
       const axiosError = error as AxiosError<ApiResponse>;
