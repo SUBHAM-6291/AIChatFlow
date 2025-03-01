@@ -1,7 +1,8 @@
+// @/Models/User.Model.ts
 import mongoose, { Schema, Document } from 'mongoose';
 
-// CHAPTER 1: Message Interface and Schema
 export interface Message extends Document {
+  _id: string; // Explicitly type as string for frontend
   content: string;
   createdAt: Date;
 }
@@ -18,7 +19,6 @@ const messageSchema: Schema<Message> = new Schema({
   },
 });
 
-// CHAPTER 2: User Interface and Schema
 export interface User extends Document {
   username: string;
   email: string;
@@ -64,11 +64,9 @@ const userSchema: Schema<User> = new Schema({
     type: Boolean,
     default: true,
   },
-  messages: [messageSchema], // Embedded subdocument schema
+  messages: [messageSchema],
 });
 
-// CHAPTER 3: Model Registration
-// Prevent model recompilation in development with hot reload
 export const MessageModel =
   mongoose.models.Message || mongoose.model<Message>('Message', messageSchema);
 export const UserModel =

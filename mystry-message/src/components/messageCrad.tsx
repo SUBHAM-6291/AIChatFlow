@@ -4,10 +4,7 @@ import React, { useState } from 'react'
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 import {
   AlertDialog,
@@ -21,16 +18,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { Toaster, toast } from "sonner" // Import both Toaster and toast from sonner
+import { toast } from "sonner"
 import axios, { AxiosError } from 'axios'
 import { ApiResponse } from '@/Types/ApiResponse'
-
-// Define the Message type
-type Message = {
-  id: string;
-  content?: string;
-  title?: string;
-}
+import { Message } from '@/Models/User.Model'
 
 type MessageCardProps = {
   message: Message;
@@ -43,11 +34,11 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
   const handleDeleteConfirm = async () => {
     setIsDeleting(true);
     try {
-      const response = await axios.delete<ApiResponse>(`/api/delete-message/${message.id}`);
+      const response = await axios.delete<ApiResponse>(`/api/delete-message/${message._id}`);
       toast.success(response.data.message || "Message deleted successfully", {
         description: "The message has been removed.",
       });
-      onMessageDelete(message.id);
+      onMessageDelete(message._id);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error(axiosError.response?.data?.message || "Failed to delete message", {
@@ -59,49 +50,45 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
   };
 
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>{message.title || 'Card Title'}</CardTitle>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button 
-                variant="destructive"
-                className="text-red-600 hover:text-red-800 transition-colors"
+    <Card>
+      <CardHeader>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button 
+              variant="destructive"
+              className="text-red-600 hover:text-red-800 transition-colors"
+              disabled={isDeleting}
+            >
+              <span className="w-6 h-5 inline-block">✕</span>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete this message
+                and remove its data from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleDeleteConfirm}
                 disabled={isDeleting}
               >
-                <span className="w-6 h-5 inline-block">✕</span>
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete this message
-                  and remove its data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-                <AlertDialogAction 
-                  onClick={handleDeleteConfirm}
-                  disabled={isDeleting}
-                >
-                  {isDeleting ? "Deleting..." : "Continue"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </CardHeader>
-        <CardContent>
-          {message.content || 'Add your card content here'}
-        </CardContent>
-        <CardFooter>
-          {/* Add footer content if needed */}
-        </CardFooter>
-      </Card>
-      <Toaster /> {/* Add Toaster here or in a parent layout */}
-    </div>
+                {isDeleting ? "Deleting..." : "Continue"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </CardHeader>
+      <CardContent>
+        <p>{message.content}</p>
+        <p className="text-sm text-gray-500 mt-1">
+          {new Date(message.createdAt).toLocaleString()}
+        </p>
+      </CardContent>
+    </Card>
   )
 }
 
